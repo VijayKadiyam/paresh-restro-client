@@ -2,7 +2,7 @@ import * as types from '../mutation_types.js'
 
 const state = {
   api: {
-    // apiUrl: 'http://localhost:8080/'
+    // apiUrl: 'http://localhost:8080/' 
     apiUrl: 'http://13.126.244.116:8088/'
   },
   outlet: {

@@ -1,0 +1,8 @@
+#!/bin/bash
+cd /var/www/html/restro/client 
+
+npm install
+
+npm run build
+
+

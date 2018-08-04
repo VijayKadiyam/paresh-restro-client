@@ -110,7 +110,7 @@ export default {
           this.authSet(data)
           this.authInitialize()
 
-          this.$router.push('/dashboard')
+          this.$router.push('/table-orders')
         })
         .catch(errors => {
           console.log('Errors below: ')

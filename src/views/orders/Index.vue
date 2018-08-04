@@ -61,7 +61,7 @@
       <!-- End Menu Types and Items -->
       <b-col md="4"
       >
-        <b>Table: {{ $route.query.table }} / Order: {{ order.id }}</b> 
+        <b>Table: {{ $route.query.table }} / Order: {{ order.id }}</b>
         <small>
           <button
             @click="goToTables"
@@ -98,7 +98,7 @@
           style="height: 150px;"
         >
           <h5>Total Amount: {{ total_amount }} /-</h5>
-          <b-button type="button" variant="secondary" @click="smallModal = true">Get Bill</b-button>
+          <!-- <b-button type="button" variant="secondary" @click="smallModal = true">Get Bill</b-button> -->
           <b-modal title="Print Bill" size="sm" v-model="smallModal" @ok="printBill">
             <div id="section-to-print">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -139,7 +139,7 @@ export default {
       {key: 'quantity'},
       {key: 'rate'},
       {key: 'amount'},
-      {key: 'remove'},
+      {key: 'remove'}
     ],
     order: {},
     tickets: [],
@@ -176,9 +176,9 @@ export default {
         this.order = data.data.orders[0]
         this.order.tickets.forEach(ticket => {
           this.tickets.unshift(ticket)
-        })  
+        })
 
-        console.log("Mounted: Loaded tickets")
+        console.log('Mounted: Loaded tickets')
         console.log(this.tickets)
 
         this.tickets.forEach(ticket => {
@@ -189,8 +189,8 @@ export default {
 
   methods: {
     // Update order list
-    updateOrder(item) {
-      let alreadyItem = this.orderItems.find(i => i.id == item.id)
+    updateOrder (item) {
+      let alreadyItem = this.orderItems.find(i => i.id === item.id)
       if (alreadyItem) {
         alreadyItem.quantity = alreadyItem.quantity + 1
         alreadyItem.amount = alreadyItem.quantity * item.prices[0].price
@@ -216,21 +216,21 @@ export default {
     },
     // Increement an item
     increementItem (id) {
-      let item = this.items.find(i => i.id == id)
+      let item = this.items.find(i => i.id === id)
       this.addItem(item)
     },
     // Remove an item from the orders list
     removeItem (id) {
-      this.orderItems = this.orderItems.filter(item => item.id != id)
+      this.orderItems = this.orderItems.filter(item => item.id !== id)
       // TO renumber the list of orders
-      let length = this.orderItems.length;
+      let length = this.orderItems.length
       this.orderItems.forEach(item => {
         item.no = length
         length--
       })
 
-      let tickets = this.tickets.filter(ticket => ticket.recepie_menu.id == id)
-      console.log("Remove Item: All tickets")
+      let tickets = this.tickets.filter(ticket => ticket.recepie_menu.id === id)
+      console.log('Remove Item: All tickets')
       console.log(this.tickets)
       tickets.forEach(ticket => {
         this.removeTicket(ticket.recepie_menu.id)
@@ -238,9 +238,9 @@ export default {
     },
     // Decreement an item
     decreementItem (id) {
-      let alreadyItem = this.orderItems.find(i => i.id == id)
-      let item = this.items.find(i => i.id == id)
-      if (alreadyItem.quantity != 1) {
+      let alreadyItem = this.orderItems.find(i => i.id === id)
+      let item = this.items.find(i => i.id === id)
+      if (alreadyItem.quantity !== 1) {
         alreadyItem.quantity = alreadyItem.quantity - 1
         alreadyItem.amount = alreadyItem.quantity * item.prices[0].price
 
@@ -261,20 +261,20 @@ export default {
 
       ticket.post(`/api/orders/${ticket.order_id}/tickets`)
         .then(data => {
-          console.log("Add Ticket: Total tickets while adding")
+          console.log('Add Ticket: Total tickets while adding')
           this.tickets.unshift(data.data)
           console.log(this.tickets)
         })
     },
     // remove ticket
     removeTicket (id) {
-      let ticket = this.tickets.find(ticket => ticket.recepie_menu.id == id)
-      console.log("Remove Ticket: Total tickets")
+      let ticket = this.tickets.find(ticket => ticket.recepie_menu.id === id)
+      console.log('Remove Ticket: Total tickets')
       console.log(this.tickets)
       console.log(ticket.id + ' ' + ticket.recepie_menu_id)
 
-      console.log("Remove Ticket: Tickets after deleting")
-      this.tickets = this.tickets.filter(t => t.id != ticket.id)
+      console.log('Remove Ticket: Tickets after deleting')
+      this.tickets = this.tickets.filter(t => t.id !== ticket.id)
       console.log(this.tickets)
 
       this.form.delete(`/api/orders/${this.order.id}/tickets/${ticket.id}`)
@@ -295,8 +295,8 @@ export default {
     },
     // Cancel Order
     cancelOrder () {
-      var confirm = window.confirm("Are you sure you want to cancel the order")
-      if(confirm) {
+      var confirm = window.confirm('Are you sure you want to cancel the order')
+      if (confirm) {
         // Update the table status
         this.form = new Form({
           'id': this.table_id,
@@ -316,18 +316,20 @@ export default {
     },
     // print Bill
     printBill () {
-      window.print()
+      // window.print()
+      alert("Print will depend on the printer connected. Once configured it will start printing")
     },
     // Search items
     searchItems () {
-      this.items = this.searchDropdown;
-      this.items = this.items.filter(i => i.recepie.name == this.search)
+      this.items = this.searchDropdown
+      this.items = this.items.filter(i => i.recepie.name === this.search)
     },
     // All items
     searchByType (type) {
-      this.items = this.searchDropdown;
-      if(type != "All")
-        this.items = this.items.filter(i => i.type.id == type)
+      this.items = this.searchDropdown
+      if (type !== 'All') {
+        this.items = this.items.filter(i => i.type.id === type)
+      }
     }
   }
 }

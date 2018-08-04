@@ -41,7 +41,7 @@ import EditContact from '@/views/contacts/Edit.vue'
 // Settings
 import PrimeSettings from '@/views/settings/PrimeSettings.vue'
 // Reports
-import OrderReport from '@/views/reports/Orders.vue' 
+import OrderReport from '@/views/reports/Orders.vue'
 // Auth
 import Login from '@/views/auth/Login'
 import Register from '@/views/auth/Register'

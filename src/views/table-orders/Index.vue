@@ -84,7 +84,7 @@ export default {
       })
       this.form.patch(`/api/tables/${id}`)
         .then(data => {
-          let item = this.items.find(i => i.id == id)
+          let item = this.items.find(i => i.id === id)
           item.status_id = data.data.status_id
           this.$router.push(`orders?source_id=1&table=${item.id}`)
         })

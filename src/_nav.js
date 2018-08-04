@@ -136,6 +136,6 @@ export default {
       name: 'Order Report',
       url: '/order-report',
       icon: 'icon-paper-plane'
-    },
+    }
   ]
 }

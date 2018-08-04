@@ -1,6 +1,25 @@
 <template>
   <div class="animated fadeIn">
 
+    <!-- Search -->
+    <form @submit.prevent="searchRecepie">
+      <b-form-group>
+        <b-input-group>
+          <b-form-input v-model="search" type="text" list="browsers" name="browser" placeholder="Search Recepie"></b-form-input>
+          <!-- Attach Right button -->
+          <b-input-group-append>
+            <b-button variant="primary" type="submit">Search</b-button>
+            &nbsp;&nbsp;&nbsp;
+            <b-button variant="primary" @click="getAllRecepies">Get all recepies</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
+    </form>
+    <datalist id="browsers">
+      <option v-for="(item, i) in duplicateItems" :key="`item${i}`" :value="item.name"></option>
+    </datalist>
+    <!-- End Search -->
+
     <b-row>
       <b-col lg="12">
           <c-table striped small
@@ -32,7 +51,9 @@ export default {
       {key: 'actions'}
     ],
     items: [],
-    form: new Form({})
+    duplicateItems: [],
+    form: new Form({}),
+    search: ''
   }),
 
   components: {
@@ -50,6 +71,21 @@ export default {
           })
         })
       })
+
+      this.duplicateItems = this.items
+  },
+
+  methods: {
+    // Search item
+    searchRecepie () {
+      this.items = [
+        this.items.find(item => item.name === this.search)
+      ]
+    },
+    // Get all items
+    getAllRecepies () {
+      this.items = this.duplicateItems
+    }
   }
 }
 </script>

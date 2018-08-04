@@ -20,15 +20,15 @@
         <!-- End To get the menu types -->
         <!-- Search -->
         <form @submit.prevent="searchItems">
-        <b-form-group>
-          <b-input-group>
-            <b-form-input v-model="search" type="text" list="browsers" name="browser" placeholder="Search Item"></b-form-input>
-            <!-- Attach Right button -->
-            <b-input-group-append>
-              <b-button variant="primary" type="submit">Search</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
+          <b-form-group>
+            <b-input-group>
+              <b-form-input v-model="search" type="text" list="browsers" name="browser" placeholder="Search Item"></b-form-input>
+              <!-- Attach Right button -->
+              <b-input-group-append>
+                <b-button variant="primary" type="submit">Search</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
         </form>
         <datalist id="browsers">
           <option v-for="(item, i) in searchDropdown" :key="`item${i}`" :value="item.recepie.name"></option>

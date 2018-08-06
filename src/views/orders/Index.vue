@@ -36,7 +36,7 @@
         <br>
         <!-- End Search -->
         <!-- Menu Items -->
-        <b-row>
+        <b-row id="itemList">
           <b-col sm="6" md="4"
             v-for="(item, i) in items"
             :key="`table${i}`"
@@ -341,6 +341,11 @@ export default {
     overflow-y: auto;
     overflow-x: hidden;
     height: 350px;
+  }
+
+  #itemList {
+    height: 500px;
+    overflow-y: auto;
   }
 
   @media print {

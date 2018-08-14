@@ -75,7 +75,7 @@
         <!-- Order Details -->
         <b-card
           header="<i class='fa fa-paper-plane'></i>&nbsp;&nbsp;Order Details"
-          style="height: 450px;"
+          style="height: 370px;"
         >
           <b-table class="table-bordered" id="orderTable" :hover="true" :striped="true" :small="true" :fixed="false" responsive="sm"
             :items="orderItems"
@@ -95,25 +95,52 @@
         <!-- Bill Details -->
         <b-card
           header="<i class='fa fa-paper-plane'></i>&nbsp;&nbsp;Bill Details"
-          style="height: 150px;"
+          style="height: 230px;"
         >
+          <b-row>
+            <b-col lg="6">
+              <b-form-select
+                value=""
+                :plain="true"
+                :options="discount_types"
+                v-model="order_discount.discount_type_id"
+              >
+              </b-form-select>
+            </b-col>
+            <b-col lg="6"
+              v-if="order_discount.discount_type_id != 2"
+            >
+              <b-form-select
+                value=""
+                :plain="true"
+                :options="discounts"
+                v-model="order_discount.discount_id"
+                @input="changeDiscount"
+              >
+              </b-form-select>
+            </b-col>
+            <b-col lg="6" v-else>
+              <input type="number"
+                :class="`form-control ${form.errors.has('name') ? 'is-invalid' : ''}`"
+                placeholder="Discount Amount"
+                name="name"
+                v-model="order_discount.amount"
+                @keypress="changeDiscountByAmount"
+              >
+            </b-col>
+          </b-row>
+          <br>
+          <h6>Amount: {{ amount }} /-</h6>
+          <h6>Discount: {{ discount }} /-</h6>
           <h5>Total Amount: {{ total_amount }} /-</h5>
-          <!-- <b-button type="button" variant="secondary" @click="smallModal = true">Get Bill</b-button> -->
-          <b-modal title="Print Bill" size="sm" v-model="smallModal" @ok="printBill">
-            <div id="section-to-print">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-              proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </div>
-          </b-modal>
-
-          <b-button class="mb-3" size="sm" variant='success' @click="printBill">
-            <i class='icon-arrow-right'></i>&nbsp;
-            Print Bill
-          </b-button>
+          <b-row>
+            <b-col lg="6">
+              <b-button class="mb-3" size="sm" variant='success' @click="printBill">
+                <i class='icon-arrow-right'></i>&nbsp;
+                Print Bill
+              </b-button>
+            </b-col>
+          </b-row>
         </b-card>
         <!-- End Bill Details -->
       </b-col>
@@ -145,11 +172,28 @@ export default {
     tickets: [],
     orderItems: [],
     table_id: '',
-    total_amount: 0,
+    amount: 0,
     search: '',
     searchDropdown: [],
-    smallModal: false
+    smallModal: false,
+    discounts: [],
+    discount_types: [],
+    order_discount: {
+      discount_type_id: '',
+      discount_id: '',
+      amount: 0
+    }
   }),
+
+  computed: {
+    discount () {
+      return this.order_discount.amount
+    },
+
+    total_amount () {
+      return this.amount - this.discount
+    }
+  },
 
   components: {
     cTable
@@ -170,6 +214,32 @@ export default {
         this.items = data.data
         this.searchDropdown = data.data
       })
+    // To get all the discounts
+    this.form.get('/api/discounts')
+      .then(data => {
+        this.discounts.push({
+          'text': 'Select Discount Percent',
+          'value': '',
+          'percent': ''
+        })
+        data.data.forEach(discount => this.discounts.push({
+          'text': discount.name,
+          'value': discount.id,
+          'percent': discount.percent
+        }))
+      })
+    // To get all the discount types
+    this.form.get('/api/discount-types')
+      .then(data => {
+        this.discount_types.push({
+          'text': 'Select Discount Type',
+          'value': ''
+        })
+        data.data.forEach(type => this.discount_types.push({
+          'text': type.type,
+          'value': type.id
+        }))
+      })
     // To get all the orders of a table
     this.form.get(`/api/tables/${this.table_id}`)
       .then(data => {
@@ -177,6 +247,17 @@ export default {
         this.order.tickets.forEach(ticket => {
           this.tickets.unshift(ticket)
         })
+
+        // To get the discount applied to this order
+        this.form.get(`/api/orders/${this.order.id}/order-discounts`)
+          .then(data => {
+            if(data.data.length)
+              this.order_discount = {
+                discount_type_id: data.data[0].discount_type_id,
+                discount_id: data.data[0].discount_id,
+                amount: data.data[0].amount
+              }
+          })
 
         console.log('Mounted: Loaded tickets')
         console.log(this.tickets)
@@ -287,11 +368,11 @@ export default {
     },
     // Add to Total amount
     addAmount (amount) {
-      this.total_amount += parseFloat(amount)
+      this.amount += parseFloat(amount)
     },
     // Remove from Total amount
     removeAmount (amount) {
-      this.total_amount -= parseFloat(amount)
+      this.amount -= parseFloat(amount)
     },
     // Cancel Order
     cancelOrder () {
@@ -317,7 +398,8 @@ export default {
     // print Bill
     printBill () {
       // window.print()
-      alert("Print will depend on the printer connected. Once configured it will start printing")
+      // alert("Print will depend on the printer connected. Once configured it will start printing")
+      this.form.get(`/api/print?order_id=${this.order.id}&hotel_id=${this.$store.getters.outlet.id}`)
     },
     // Search items
     searchItems () {
@@ -330,6 +412,30 @@ export default {
       if (type !== 'All') {
         this.items = this.items.filter(i => i.type.id === type)
       }
+    },
+    // Change the discount
+    changeDiscount () {
+      let discount = this.discounts.find(discount => discount.value == this.order_discount.discount_id)
+      this.order_discount.amount = this.amount * discount.percent / 100
+      console.log(discount.percent)
+      this.saveDiscount();
+    },
+    // Change the dicount by amount 
+    changeDiscountByAmount () {
+      this.saveDiscount()
+    },
+    // Save the discount into the db
+    saveDiscount () {
+      this.form.get(`/api/orders/${this.order.id}/order-discounts`)
+        .then(data => {
+          let d = data.data[0]
+          let form = new Form(this.order_discount)
+          if (data.data.length == 0) {
+            form.post(`/api/orders/${this.order.id}/order-discounts`)
+          } else {
+            form.patch(`/api/orders/${this.order.id}/order-discounts/${d.id}`)
+          }
+        })
     }
   }
 }
@@ -340,7 +446,7 @@ export default {
     display: block;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 350px;
+    height: 270px;
   }
 
   #itemList {

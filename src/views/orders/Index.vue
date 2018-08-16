@@ -426,7 +426,8 @@ export default {
     },
     // Change the discount type
     chnageDiscountType () {
-      this.order_discount.amount = 0
+      if(this.order_discount.discount_type_id == 1)
+        this.order_discount.amount = 0
     },
     // Change the discount
     changeDiscount () {

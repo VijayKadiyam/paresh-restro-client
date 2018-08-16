@@ -404,8 +404,12 @@ export default {
       // window.print()
       // alert("Print will depend on the printer connected. Once configured it will start printing")
       this.form.get(`/api/print?order_id=${this.order.id}&hotel_id=${this.$store.getters.outlet.id}`)
-        .then(d => this.endOrder())
-        .catch(e => this.endOrder())
+        .then(d => {
+          this.endOrder()
+        })
+        .catch(e => {
+          this.endOrder()
+        })
     },
     // Search items
     searchItems () {

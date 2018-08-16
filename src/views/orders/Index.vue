@@ -104,6 +104,7 @@
                 :plain="true"
                 :options="discount_types"
                 v-model="order_discount.discount_type_id"
+                @input="chnageDiscountType"
               >
               </b-form-select>
             </b-col>
@@ -125,7 +126,7 @@
                 placeholder="Discount Amount"
                 name="name"
                 v-model="order_discount.amount"
-                @keypress="changeDiscountByAmount"
+                @keyup="changeDiscountByAmount"
               >
             </b-col>
           </b-row>
@@ -423,6 +424,10 @@ export default {
         this.items = this.items.filter(i => i.type.id === type)
       }
     },
+    // Change the discount type
+    chnageDiscountType () {
+      this.order_discount.amount = 0
+    },
     // Change the discount
     changeDiscount () {
       let discount = this.discounts.find(discount => discount.value == this.order_discount.discount_id)
@@ -432,6 +437,7 @@ export default {
     },
     // Change the dicount by amount 
     changeDiscountByAmount () {
+      this.order_discount.discount_id = 1
       this.saveDiscount()
     },
     // Save the discount into the db

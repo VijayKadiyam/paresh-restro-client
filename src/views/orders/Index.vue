@@ -378,17 +378,21 @@ export default {
     cancelOrder () {
       var confirm = window.confirm('Are you sure you want to cancel the order')
       if (confirm) {
-        // Update the table status
-        this.form = new Form({
-          'id': this.table_id,
-          'status_id': 2
-        })
-        this.form.patch(`/api/tables/${this.table_id}`)
-          .then(data => {
-            document.body.classList.toggle('sidebar-hidden')
-            this.$router.push('/table-orders')
-          })
+        this.endOrder()
       }
+    },
+    // End the order 
+    endOrder () {
+      // Update the table status
+      this.form = new Form({
+        'id': this.table_id,
+        'status_id': 2
+      })
+      this.form.patch(`/api/tables/${this.table_id}`)
+        .then(data => {
+          document.body.classList.toggle('sidebar-hidden')
+          this.$router.push('/table-orders')
+        })
     },
     // Go back to tables
     goToTables () {
@@ -400,6 +404,8 @@ export default {
       // window.print()
       // alert("Print will depend on the printer connected. Once configured it will start printing")
       this.form.get(`/api/print?order_id=${this.order.id}&hotel_id=${this.$store.getters.outlet.id}`)
+        .then(d => this.endOrder())
+        .catch(e => this.endOrder())
     },
     // Search items
     searchItems () {

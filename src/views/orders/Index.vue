@@ -289,6 +289,8 @@ export default {
         })
         this.addAmount(item.prices[0].price)
       }
+
+      this.resetDiscount()
     },
     // To add an item to the orders
     addItem (item) {
@@ -453,6 +455,13 @@ export default {
             form.patch(`/api/orders/${this.order.id}/order-discounts/${d.id}`)
           }
         })
+    },
+    resetDiscount () {
+      this.order_discount = {
+        discount_type_id: '',
+        discount_id: '',
+        amount: ''
+      }
     }
   }
 }

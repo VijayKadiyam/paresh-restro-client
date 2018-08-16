@@ -364,6 +364,7 @@ export default {
       this.form.delete(`/api/orders/${this.order.id}/tickets/${ticket.id}`)
         .then(() => {
           this.removeAmount(ticket.amount)
+          this.resetDiscount()
         })
         .catch(errors => {
           this.removeTicket(id)
@@ -428,8 +429,9 @@ export default {
     },
     // Change the discount type
     chnageDiscountType () {
-      if(this.order_discount.discount_type_id == 1)
+      if(this.order_discount.discount_type_id == 1) {
         this.order_discount.amount = 0
+      }
     },
     // Change the discount
     changeDiscount () {
@@ -457,10 +459,11 @@ export default {
         })
     },
     resetDiscount () {
-      this.order_discount = {
-        discount_type_id: '',
-        discount_id: '',
-        amount: ''
+      if (this.order_discount.discount_type_id == 1) {
+        let discount = this.discounts.find(discount => discount.value == this.order_discount.discount_id)
+        this.order_discount.amount = this.amount * discount.percent / 100
+
+        this.saveDiscount()
       }
     }
   }

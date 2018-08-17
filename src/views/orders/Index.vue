@@ -438,7 +438,7 @@ export default {
       let discount = this.discounts.find(discount => discount.value == this.order_discount.discount_id)
       this.order_discount.amount = this.amount * discount.percent / 100
       console.log(discount.percent)
-      this.saveDiscount();
+      this.saveDiscount()
     },
     // Change the dicount by amount 
     changeDiscountByAmount () {

@@ -16,7 +16,7 @@
       </b-form-group>
     </form>
     <datalist id="browsers">
-      <option v-for="(item, i) in duplicateItems" :key="`item${i}`" :value="item.name"></option>
+      <option v-for="(item, i) in duplicateItems" :key="`item${i}`" :value="'[' + item.id + '] ' + item.name"></option>
     </datalist>
     <!-- End Search -->
 
@@ -47,7 +47,7 @@ export default {
   data: () => ({
     fields: [
       {key: 'name'},
-      {key: 'description'},
+      {key: 'id'},
       {key: 'actions'}
     ],
     items: [],
@@ -66,7 +66,7 @@ export default {
         data.data.forEach(item => {
           this.items.push({
             name: item.name,
-            description: item.description,
+            id: item.description,
             actions: '/recepies/' + item.id + '/edit'
           })
         })
@@ -79,7 +79,7 @@ export default {
     // Search item
     searchRecepie () {
       this.items = [
-        this.items.find(item => item.name === this.search)
+        this.items.find(item => '[' + item.id + '] ' + item.name === this.search)
       ]
     },
     // Get all items

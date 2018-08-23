@@ -31,7 +31,8 @@
           </b-form-group>
         </form>
         <datalist id="browsers">
-          <option v-for="(item, i) in searchDropdown" :key="`item${i}`" :value="item.recepie.name"></option>
+          <option v-for="(item, i) in searchDropdown" :key="`item${i}`" 
+            :value="'[' + item.recepie.description + '] ' + item.recepie.name"></option>
         </datalist>
         <br>
         <!-- End Search -->
@@ -418,7 +419,7 @@ export default {
     // Search items
     searchItems () {
       this.items = this.searchDropdown
-      this.items = this.items.filter(i => i.recepie.name === this.search)
+      this.items = this.items.filter(i => '[' + i.recepie.description + '] ' + i.recepie.name === this.search)
     },
     // All items
     searchByType (type) {

@@ -38,7 +38,7 @@
                 </b-input-group-prepend>
                 <textarea
                   :class="`form-control ${form.errors.has('description') ? 'is-invalid' : ''}`"
-                  placeholder="Recepie description"
+                  placeholder="Recepie id"
                   name="description"
                   v-model="form.description"
                 ></textarea>

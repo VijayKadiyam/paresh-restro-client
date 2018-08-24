@@ -26,6 +26,12 @@
       <template slot="actions" slot-scope="data">
         <b-button size="sm" variant='success' :to="data.item.actions"><i class='icon-pencil'></i>&nbsp; Edit</b-button>
       </template>
+      <template slot="total_amount" slot-scope="data">
+        <div v-html="data.item.total_amount"></div>
+      </template>
+      <template slot="table" slot-scope="data">
+        <div v-html="data.item.table"></div>
+      </template>
     </b-table>
     <nav>
       <b-pagination :total-rows="getRowCount(items)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>

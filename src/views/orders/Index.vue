@@ -410,7 +410,10 @@ export default {
       // alert("Print will depend on the printer connected. Once configured it will start printing")
       this.form.get(`/api/print?order_id=${this.order.id}&hotel_id=${this.$store.getters.outlet.id}`)
         .then(d => {
-          this.endOrder()
+          this.form.get(`/api/print?order_id=${this.order.id}&hotel_id=${this.$store.getters.outlet.id}`)
+            .then(d1 => {
+              this.endOrder()
+            })
         })
         .catch(e => {
           this.endOrder()
